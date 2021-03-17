@@ -30,9 +30,15 @@ namespace WordFinder{
             {
                 foreach(char charItem in item.ToCharArray())
                 {
+                    int row = ind / _squareSize;
+                    int col = ind % _squareSize;
+
+                    if(row > _charMatrix.GetUpperBound(0))
+                        return;
+
                     if(charItem != '\0')
                     {
-                        _charMatrix[ind / _squareSize, ind % _squareSize] = charItem;
+                        _charMatrix[row, col] = charItem;
                         ind++;
                     }
                 }
@@ -44,6 +50,23 @@ namespace WordFinder{
 
             IEnumerable<(string, int)> result = wordstream.Select( x => (x, Frequency(x))).OrderByDescending( t => t.Item2).Take(10);
 
+            foreach((string,int) element in result)
+                Console.WriteLine($"({element.Item1},{element.Item2})");
+
+            if(result.All( x => x.Item2 == 0))
+                return new List<string>();
+            
+            return result.Select( x => x.Item1);
+        }
+
+        public IEnumerable<string> Find2(IEnumerable<string> wordstream)
+        {
+
+            IEnumerable<(string, int)> result = wordstream.Select( x => (x, Frequency2(x))).OrderByDescending( t => t.Item2).Take(10);
+
+            foreach((string,int) element in result)
+                Console.WriteLine($"({element.Item1},{element.Item2})");
+
             if(result.All( x => x.Item2 == 0))
                 return new List<string>();
             
@@ -53,6 +76,19 @@ namespace WordFinder{
         public int GetMatrixSize()
         {
             return _squareSize;
+        }
+
+        public void PrintMatrix()
+        {
+            Console.WriteLine("_charMatrix[,] Content:");
+            for(int row = 0; row < _squareSize; row++)
+            {
+                for(int col = 0; col < _squareSize; col++)
+                {
+                    Console.Write(_charMatrix[row,col]);
+                }
+                Console.Write("\n");
+            }
         }
 
         private int Frequency(string word)
@@ -76,6 +112,52 @@ namespace WordFinder{
                     string verticalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[x, ind]).ToArray());
                     //Console.WriteLine($"v:{verticalLine}");
                     total += regex.Matches(verticalLine).Count;
+                }
+            }
+
+            return total;
+        }
+
+        private int Frequency2(string word)
+        {
+            char[] charsInWord = word.ToCharArray();
+            int total = 0;
+            int ind;
+
+            for(ind = 0; ind < _squareSize; ind++)
+            {
+                if(_charMatrix[ind, 0] != '\0')
+                {
+                    for(int col = 0; col < _squareSize; col++)
+                    {
+                        int charPos = 0;
+                        
+                        while(
+                            charPos <= charsInWord.GetUpperBound(0) && 
+                            (col + charPos) <= _charMatrix.GetUpperBound(1) && 
+                            charsInWord[charPos] == _charMatrix[ind, col + charPos]
+                        )
+                            charPos++;
+                        
+                        if(charPos > charsInWord.GetUpperBound(0)) total++; //found a complete word (horizontal)
+                    }
+                }
+
+                if(_charMatrix[0, ind] != '\0')
+                {
+                    for(int row = 0; row < _squareSize; row++)
+                    {
+                        int charPos = 0;
+                        
+                        while(
+                            charPos <= charsInWord.GetUpperBound(0) && 
+                            (row + charPos) <= _charMatrix.GetUpperBound(0) && 
+                            charsInWord[charPos] == _charMatrix[row + charPos, ind]
+                        )
+                            charPos++;
+
+                        if(charPos > charsInWord.GetUpperBound(0)) total++; //found a complete word (vertical)
+                    }
                 }
             }
 
