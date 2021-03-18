@@ -61,7 +61,7 @@ namespace WordFinder{
         {
             //Creates a collection of tuples (string, int) which contains every word with the frequency of that word in the matrix.
             //Sort that collection by the frequency in a descending order and then takes the first 10 elements.
-            IEnumerable<(string, int)> result = wordstream.Select( x => (x, Frequency(x))).OrderByDescending( t => t.Item2).Take(10);
+            IEnumerable<(string, int)> result = wordstream.Select( x => (x, CharBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
 
             foreach((string,int) element in result)
                 Console.WriteLine($"({element.Item1},{element.Item2})");
@@ -110,7 +110,6 @@ namespace WordFinder{
         /// </summary>
         public void PrintMatrix()
         {
-            Console.WriteLine("_charMatrix[,] Content:");
             for(int row = 0; row < _squareSize; row++)
             {
                 for(int col = 0; col < _squareSize; col++)
@@ -154,47 +153,40 @@ namespace WordFinder{
         /// <summary>
         /// Returns the frequency of occurrence of a word in the matrix based on simple char comparisson.
         /// </summary>
-        private int Frequency(string word)
+        private int CharBasedFrequency(string word)
         {
             char[] charsInWord = word.ToCharArray();
+            int wordUpperBound = charsInWord.GetUpperBound(0);
             int total = 0;
-            int ind;
-
-            for(ind = 0; ind < _squareSize; ind++)
+            
+            for(int ind1 = 0; ind1 < _squareSize; ind1++)
             {
-                if(_charMatrix[ind, 0] != '\0')
+                for(int ind2 = 0; ind2 < _squareSize; ind2++)
                 {
-                    for(int col = 0; col < _squareSize; col++)
-                    {
-                        int charPos = 0;
-                        
-                        while(
-                            charPos <= charsInWord.GetUpperBound(0) && 
-                            (col + charPos) <= _charMatrix.GetUpperBound(1) && 
-                            charsInWord[charPos] == _charMatrix[ind, col + charPos]
-                        )
-                            charPos++;
-                        
-                        if(charPos > charsInWord.GetUpperBound(0)) total++; //found a complete word (horizontal)
-                    }
-                }
+                    if(ind2 + wordUpperBound + 1 > _squareSize)
+                        break; //breaks if word doesn't fit in the remaining positions of the array
+                    
+                    int charPos = 0;
+                    while(
+                        charPos <= wordUpperBound && 
+                        (ind2 + charPos) < _squareSize && 
+                        charsInWord[charPos].Equals(_charMatrix[ind1, ind2 + charPos])
+                    )
+                        charPos++;
+                
+                    if(charPos > wordUpperBound) total++; //found a complete word (horizontal)
 
-                if(_charMatrix[0, ind] != '\0')
-                {
-                    for(int row = 0; row < _squareSize; row++)
-                    {
-                        int charPos = 0;
-                        
-                        while(
-                            charPos <= charsInWord.GetUpperBound(0) && 
-                            (row + charPos) <= _charMatrix.GetUpperBound(0) && 
-                            charsInWord[charPos] == _charMatrix[row + charPos, ind]
-                        )
-                            charPos++;
+                    charPos = 0;
+                    while(
+                        charPos <= wordUpperBound && 
+                        (ind2 + charPos) < _squareSize && 
+                        charsInWord[charPos].Equals(_charMatrix[ind2 + charPos, ind1])
+                    )
+                        charPos++;
 
-                        if(charPos > charsInWord.GetUpperBound(0)) total++; //found a complete word (vertical)
-                    }
+                    if(charPos > wordUpperBound) total++; //found a complete word (vertical)
                 }
+                
             }
 
             return total;

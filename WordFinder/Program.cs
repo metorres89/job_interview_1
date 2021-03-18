@@ -76,30 +76,37 @@ namespace WordFinder
                 "truddodosintutFugiatadvoluptateipsumesseetproidentexcepteurvenia"
             };
 
+            
+
             WordFinder wf = new WordFinder(wordMatrix);
 
             List<string> wordsToFind = new List<string>(){"Laborum", "irure", "ea", "LA", "Excepteur", "excepteur", "eee", "jacinto", "lorem", "ipsum", "dolor"};
             IEnumerable<string> mostFrequent;
-
-            wf.PrintMatrix(); //debug purpose only
             
-            Console.WriteLine("Find!");
+            Console.WriteLine("char matrix[,] content:\n");
+            wf.PrintMatrix(); //debug purpose only
+
+            Console.WriteLine("\n1. Find (char based algorithm)");
             var watch = System.Diagnostics.Stopwatch.StartNew();
             mostFrequent = wf.Find(wordsToFind);
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("1. Top 10 words:");
             foreach(string word in mostFrequent)
-                Console.WriteLine($"word: {word}");
-            Console.WriteLine($"Find Took {elapsedMs} milliseconds!\n");
+                Console.WriteLine($"\t{word}");
+            Console.WriteLine($"1. Find took {elapsedMs} milliseconds!\n");
 
-            Console.WriteLine("Find2!");
+            Console.WriteLine();
+
+            Console.WriteLine("2. Find2 (regex based algorithm)");
             watch = System.Diagnostics.Stopwatch.StartNew();
             mostFrequent = wf.Find2(wordsToFind);
             watch.Stop();
             elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("2. Top 10 words:");
             foreach(string word in mostFrequent)
-                Console.WriteLine($"word: {word}");
-            Console.WriteLine($"Find2 Took {elapsedMs} milliseconds!\n");
+                Console.WriteLine($"\t{word}");
+            Console.WriteLine($"2. Find2 took {elapsedMs} milliseconds!\n");
         }
     }
 }
