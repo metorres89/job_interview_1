@@ -78,34 +78,27 @@ namespace WordFinder
 
             WordFinder wf = new WordFinder(wordMatrix);
 
-            List<string> wordsToFind = new List<string>(){"Laborum", "irure", "ea", "LA", "Excepteur", "eee", "jacinto"};
+            List<string> wordsToFind = new List<string>(){"Laborum", "irure", "ea", "LA", "Excepteur", "excepteur", "eee", "jacinto", "lorem", "ipsum", "dolor"};
             IEnumerable<string> mostFrequent;
 
+            wf.PrintMatrix(); //debug purpose only
+            
+            Console.WriteLine("Find!");
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            // the code that you want to measure comes here
-
-
-            wf.PrintMatrix(); //debug purpose
-
-            Console.WriteLine("Find1!");
             mostFrequent = wf.Find(wordsToFind);
-            foreach(string word in mostFrequent)
-                Console.WriteLine($"word: {word}");
-
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
-
-            Console.WriteLine($"Find1 Took {elapsedMs} milliseconds!\n");
-
-            watch = System.Diagnostics.Stopwatch.StartNew();
-
-            Console.WriteLine("Find2!");
-            mostFrequent = wf.Find2(wordsToFind);
             foreach(string word in mostFrequent)
                 Console.WriteLine($"word: {word}");
+            Console.WriteLine($"Find Took {elapsedMs} milliseconds!\n");
 
+            Console.WriteLine("Find2!");
+            watch = System.Diagnostics.Stopwatch.StartNew();
+            mostFrequent = wf.Find2(wordsToFind);
             watch.Stop();
             elapsedMs = watch.ElapsedMilliseconds;
+            foreach(string word in mostFrequent)
+                Console.WriteLine($"word: {word}");
             Console.WriteLine($"Find2 Took {elapsedMs} milliseconds!\n");
         }
     }
