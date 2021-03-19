@@ -64,7 +64,7 @@ namespace WordFinder{
             IEnumerable<(string, int)> result = wordstream.Distinct().Select( x => (x, CharBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
 
             foreach((string,int) element in result)
-                Console.WriteLine($"\t({element.Item1},{element.Item2})");
+                Console.Write($"({element.Item1},{element.Item2}),");
 
             //if all the words in the wordstream are not present in the matrix then we return an empty set of strings.
             if(result.All( x => x.Item2 == 0))
@@ -89,7 +89,7 @@ namespace WordFinder{
             IEnumerable<(string, int)> result = wordstream.Distinct().Select( x => (x, RegExBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
 
             foreach((string,int) element in result)
-                Console.WriteLine($"\t({element.Item1},{element.Item2})");
+                Console.Write($"({element.Item1},{element.Item2}),");
 
             if(result.All( x => x.Item2 == 0))
                 return new List<string>();
@@ -191,7 +191,6 @@ namespace WordFinder{
 
             return total;
         }
-        
     }
 
 }
