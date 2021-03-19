@@ -55,6 +55,119 @@ In this sample project both ways are used.
 
 Both ways return the same results but they differ in performance.
 
+# Implementation details
+
+## RegExBasedFrequency
+
+It's the core of the **Find2** method since it's used to get the occurrences for every word of the wordstream.
+It uses every word as a regular expression pattern. But to do so, it uses the characters in the vertical or horizontal lines to create char arrays and then strings to perform the matches counting.
+
+Here is some sample code:
+
+    private int RegExBasedFrequency(string word)
+    {
+        int total = 0;
+        int ind;
+        
+        //use the word as a regex pattern to look for matching occurrences
+        var regex = new Regex(word); 
+
+        for(ind = 0; ind < _squareSize; ind++) //loop for the 64 positions of a square matrix
+        {
+            //since the matrix is initialized using '\0' at every position, then it only looks in the lines that contains a valid string
+            if(_charMatrix[ind, 0] != '\0') 
+            {
+                //transform that horizontal line in a string
+                string horizontalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[ind, x]).ToArray());
+                total += regex.Matches(horizontalLine).Count; //count the matches
+            }
+
+            if(_charMatrix[0, ind] != '\0')
+            {
+                //transform that vertical line 
+                string verticalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[x, ind]).ToArray());in a string
+                total += regex.Matches(verticalLine).Count; //count the matches
+            }
+        }
+
+        return total;
+    }
+
+## CharBasedFrequency
+
+It's the core of the **Find** method, it calculates occurrences of a single word.
+It consists of two nested loops: the first one is used to iterate up to 64 times to look for the occurrences vertically or horizontally. The second loop is nested and it's used to represent the potential beggining of the matching word at that line.
+There are two additional whiles in the most nested loop to look for the matching characters of the occurence in that line:
+
+Here is some sample code:
+
+    private int CharBasedFrequency(string word)
+    {
+        char[] charsInWord = word.ToCharArray(); //get the char array from the word to find
+        int wordUpperBound = charsInWord.GetUpperBound(0);
+        int total = 0;
+        
+        //It loops up to 64 positions (vertically or horizontally)
+        for(int ind1 = 0; ind1 < _squareSize; ind1++) 
+        {
+            //It loops again up to 64 positions, because the matching word could potentially start at every position (with a few exceptions)
+            for(int ind2 = 0; ind2 < _squareSize; ind2++) 
+            {
+                //breaks if word doesn't fit in the remaining positions of the array
+                if(ind2 + wordUpperBound + 1 > _squareSize)
+                    break; 
+                
+                //looks for horizontal matches
+                int charPos = 0;
+                while(
+                    charPos <= wordUpperBound && 
+                    (ind2 + charPos) < _squareSize && 
+                    charsInWord[charPos].Equals(_charMatrix[ind1, ind2 + charPos])
+                )
+                    charPos++;//keeps moving forward in the horizontal line only while matching the characters of the word we are looking for
+            
+                if(charPos > wordUpperBound) total++; //found a complete word (horizontally)
+
+                //looks for vertical matches
+                charPos = 0;
+                while(
+                    charPos <= wordUpperBound && 
+                    (ind2 + charPos) < _squareSize && 
+                    charsInWord[charPos].Equals(_charMatrix[ind2 + charPos, ind1])
+                )
+                    charPos++;//keeps moving forward in the vertical line only while matching the characters of the word we are looking for
+
+                if(charPos > wordUpperBound) total++; //found a complete word (vertically)
+            }
+            
+        }
+
+        return total;
+    }
+
+**Graphic representation of the process in a 3 x 3 Matrix**
+
+**At position 0**: the arrows show the direction in which the nested loop is running.
+
+| ↓→ | → | → |
+|:--:|:-:|:-:|
+|  ↓ | 0 | 0 |
+|  ↓ | 0 | 0 |
+
+**At position 1**: the arrows show how we loook vertically and horizontally
+
+| 0 |  ↓ | 0 |
+|:-:|:--:|:-:|
+| → | ↓→ | → |
+| 0 |  ↓ | 0 |
+
+**At position 2**: we reached the end of this sample (3 x 3 matrix)
+
+| 0 | 0 |  ↓ |
+|:-:|:-:|:--:|
+| 0 | 0 |  ↓ |
+| → | → | ↓→ |
+
 # Evaluation
 
 To evaluate the performance of both methods I used the **System.Diagnostics.Stopwatch** class which is helpful to measure the milliseconds it takes a statement execute.
