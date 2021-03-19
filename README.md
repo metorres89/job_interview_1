@@ -1,6 +1,6 @@
 # WordFinder
 
-Repository created for a Job Interview Challenge (2021-03-16).
+Repository created for a job interview challenge (2021-03-16).
 
 # Objective
 
@@ -43,11 +43,11 @@ please include your analysis and evaluation.
 
 # Analysis
 
-To search for text there are mainly two different approaches, looking for text in a char comparison basis or using optimized tools like Regular Expressions.
+To search for text, there are mainly two different approaches, looking for text in a char comparison basis or using optimized tools like Regular Expressions.
 
 In this sample project both ways are used.
 
-**WordFinder** class was provided with two different methods:
+**WordFinder** class was written with two different methods:
 
 1. **Find**: which internally uses the **CharBasedFrequency** method. This method calculates the occurences of a single word in the char matrix using char by char comparison algorithm. It's not very optimized, but I took some precautions to skip loops for some cases, like when the word doesn't fit in the remaining positions of the vertical or horizontal array.
 
@@ -60,7 +60,7 @@ Both ways return the same results but they differ in performance.
 ## RegExBasedFrequency
 
 It's the core of the **Find2** method since it's used to get the occurrences for every word of the wordstream.
-It uses every word as a regular expression pattern. But to do so, it uses the characters in the vertical or horizontal lines to create char arrays and then strings to perform the matches counting.
+It uses every word as a regular expression pattern. But to do so, it uses the characters in the vertical or horizontal lines to create one dimensional char arrays and then strings to perform the matches counting.
 
 Here is some sample code:
 
@@ -97,7 +97,7 @@ Here is some sample code:
 
 It's the core of the **Find** method, it calculates occurrences of a single word.
 It consists of two nested loops: the first one is used to iterate up to 64 times to look for the occurrences vertically or horizontally. The second loop is nested and it's used to represent the potential beggining of the matching word at that line.
-There are two additional whiles in the most nested loop to look for the matching characters of the occurence in that line:
+There are two additional internal whiles in the most nested loop to look for the matching characters in order to count the occurences.
 
 Here is some sample code:
 
@@ -147,21 +147,21 @@ Here is some sample code:
 
 **Graphic representation of the process in a 3 x 3 Matrix**
 
-**At position 0**: the arrows show the direction in which the nested loop is running.
+**Table 1**: the arrows show the direction in which the nested for loop is running.
 
 | ↓→ | → | → |
 |:--:|:-:|:-:|
 |  ↓ | 0 | 0 |
 |  ↓ | 0 | 0 |
 
-**At position 1**: the arrows show how we loook vertically and horizontally
+**Table 2**: the execution is looping through horizontal lines left to right and vertical top to bottom.
 
 | 0 |  ↓ | 0 |
 |:-:|:--:|:-:|
 | → | ↓→ | → |
 | 0 |  ↓ | 0 |
 
-**At position 2**: we reached the end of this sample (3 x 3 matrix)
+**Table 3**: we reached the end of this sample (3 x 3 matrix)
 
 | 0 | 0 |  ↓ |
 |:-:|:-:|:--:|
@@ -170,7 +170,7 @@ Here is some sample code:
 
 # Evaluation
 
-To evaluate the performance of both methods I used the **System.Diagnostics.Stopwatch** class which is helpful to measure the milliseconds it takes a statement execute.
+To evaluate the performance of both methods I used the **System.Diagnostics.Stopwatch** class which is helpful to measure the milliseconds it takes a statement to execute.
 
 I created a Console program to execute many **Find** and **Find2** invokations with increasing wordstreams. I did it that way to test if there are any performance differences when it looks for just one word or many.
 
@@ -178,7 +178,7 @@ The program was compiled in release mode using the command:
     
     dotnet publish -c release -r linux-x64 --self-contained
 
-Because of this, I assume that the compilation did additional optimizations to make it run faster.
+Because of this, I assume that the compilation did additional optimizations to make it run faster. So running the application in release mode is representative of the best performance it can offer.
 
 **Stopwatch sample code**:
 
@@ -194,7 +194,7 @@ Because of this, I assume that the compilation did additional optimizations to m
 
 # Results
 
-Both methods are returning the same results but they differ for some milliseconds. Also there are some differences in the performance when we add more words in the wordstream.
+Both methods are returning the same results but they differ in some milliseconds. Also there are some differences in the performance when we add more words in the wordstream.
 
 | Wordstream size | Find (char comparison)<br>Elapsed time in ms | Find2 (regex)<br>Elapsed time in ms |
 |:---------------:|:-------------------------:|:-------------------------:|
@@ -221,13 +221,13 @@ Both methods are returning the same results but they differ for some millisecond
 
 **Observations**
 
-* Based on the information on the chart, we can see that only in the first execution at the start of the program the **Find** method performs worst that the **Find2**. This could be related to the **release mode** optimizations I mentioned before.
+* Based on the information on the table, we can see that only in the first execution at the start of the program the **Find** method performs worst that the **Find2**. This could be related to the **release mode** optimizations I mentioned before.
 
 * From the first 20 iterations it seems that the runtime execution is optimized to perform better in the case of the **Find** method which is based on simple char comparisson and the use of the internal char matrix.
 
-* **Find2** method, which is transforming the rows and columns of the internal char matrix to a string, in order to make use of regular expressions, it's having a slower performance, maybe because of the constant instantiation and destruction of those strings or single dimensional char arrays and also the RegEx instances.
+* **Find2** method, which is transforming the rows and columns of the internal char matrix to a string, in order to make use of regular expressions, it's having a slower performance, maybe because of the constant creation and destruction of objects needed in order to use Regular Expressions.
 
-* **Bigger wordstreams**: at the end of the Console execution, the last invokations are made passing a 69 length wordstream. At this point **Find** is taking 4 milliseconds, on the other hand **Find2** is taking 16 milliseconds.
+* **Bigger wordstreams**: at the end of the Console execution, the last invokations are made passing a collection of 69 words. At this point **Find** is taking 4 milliseconds, on the other hand **Find2** is taking 16 milliseconds.
 
 # Full console output
 <details>

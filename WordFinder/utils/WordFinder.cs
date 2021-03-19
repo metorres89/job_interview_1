@@ -128,22 +128,21 @@ namespace WordFinder{
             int total = 0;
             int ind;
             
-            var regex = new Regex(word);
+            var regex = new Regex(word); //use the word as a regex pattern to look for matching occurrences
 
-            for(ind = 0; ind < _squareSize; ind++)
+            for(ind = 0; ind < _squareSize; ind++) //loop for the 64 positions of a square matrix
             {
-                if(_charMatrix[ind, 0] != '\0')
+                //since the matrix is initialized using '\0' at every position, then it only looks in the lines that contains a valid string
+                if(_charMatrix[ind, 0] != '\0') 
                 {
-                    string horizontalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[ind, x]).ToArray());
-                    //Console.WriteLine($"h:{horizontalLine}");
-                    total += regex.Matches(horizontalLine).Count;
+                    string horizontalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[ind, x]).ToArray());//transform that horizontal line in a string
+                    total += regex.Matches(horizontalLine).Count; //count the matches
                 }
 
                 if(_charMatrix[0, ind] != '\0')
                 {
-                    string verticalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[x, ind]).ToArray());
-                    //Console.WriteLine($"v:{verticalLine}");
-                    total += regex.Matches(verticalLine).Count;
+                    string verticalLine = new string(Enumerable.Range(0, _squareSize).Select(x => _charMatrix[x, ind]).ToArray());//transform that vertical line in a string
+                    total += regex.Matches(verticalLine).Count; //count the matches
                 }
             }
 
@@ -155,36 +154,41 @@ namespace WordFinder{
         /// </summary>
         private int CharBasedFrequency(string word)
         {
-            char[] charsInWord = word.ToCharArray();
+            char[] charsInWord = word.ToCharArray(); //get the char array from the word to find
             int wordUpperBound = charsInWord.GetUpperBound(0);
             int total = 0;
             
-            for(int ind1 = 0; ind1 < _squareSize; ind1++)
+            //It loops up to 64 positions (vertically or horizontally)
+            for(int ind1 = 0; ind1 < _squareSize; ind1++) 
             {
-                for(int ind2 = 0; ind2 < _squareSize; ind2++)
+                //It loops again up to 64 positions, because the matching word could potentially start at every position (with a few exceptions)
+                for(int ind2 = 0; ind2 < _squareSize; ind2++) 
                 {
+                    //breaks if word doesn't fit in the remaining positions of the array
                     if(ind2 + wordUpperBound + 1 > _squareSize)
-                        break; //breaks if word doesn't fit in the remaining positions of the array
+                        break; 
                     
+                    //looks for horizontal matches
                     int charPos = 0;
                     while(
                         charPos <= wordUpperBound && 
                         (ind2 + charPos) < _squareSize && 
                         charsInWord[charPos].Equals(_charMatrix[ind1, ind2 + charPos])
                     )
-                        charPos++;
+                        charPos++;//keeps moving forward in the horizontal line only while matching the characters of the word we are looking for
                 
-                    if(charPos > wordUpperBound) total++; //found a complete word (horizontal)
+                    if(charPos > wordUpperBound) total++; //found a complete word (horizontally)
 
+                    //looks for vertical matches
                     charPos = 0;
                     while(
                         charPos <= wordUpperBound && 
                         (ind2 + charPos) < _squareSize && 
                         charsInWord[charPos].Equals(_charMatrix[ind2 + charPos, ind1])
                     )
-                        charPos++;
+                        charPos++;//keeps moving forward in the vertical line only while matching the characters of the word we are looking for
 
-                    if(charPos > wordUpperBound) total++; //found a complete word (vertical)
+                    if(charPos > wordUpperBound) total++; //found a complete word (vertically)
                 }
                 
             }
