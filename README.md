@@ -81,30 +81,30 @@ Because of this, I assume that the compilation did additional optimizations to m
 
 # Results
 
-Both methods are returning the same resuls but they differ for some milliseconds. Also there are some differences in the performance when we add more words in the wordstream.
+Both methods are returning the same results but they differ for some milliseconds. Also there are some differences in the performance when we add more words in the wordstream.
 
-| Wordstream size | Find (char comparison)<br>Elapsed time in ms | Find2 (regex)<br>Elapsed time in ms |   |   |
-|:---------------:|:-------------------------:|:-------------------------:|---|---|
-|1                |27                          |10                          |   |   |
-|2                |1                          |0                          |   |   |
-|3                |0                          |1                          |   |   |
-|4                |0                          |2                          |   |   |
-|5                |0                          |1                          |   |   |
-|6                |0                          |2                          |   |   |
-|7                |0                          |3                          |   |   |
-|8                |0                          |2                          |   |   |
-|9                |0                          |2                          |   |   |
-|10                |0                          |2                          |   |   |
-|11                |0                          |4                          |   |   |
-|12                |0                          |3                          |   |   |
-|13                |1                          |3                          |   |   |
-|14                |1                          |6                          |   |   |
-|15                |1                          |6                          |   |   |
-|16                |1                          |7                          |   |   |
-|17                |1                          |5                          |   |   |
-|18                |1                          |4                          |   |   |
-|19                |1                          |8                          |   |   |
-|20                |1                          |5                          |   |   |
+| Wordstream size | Find (char comparison)<br>Elapsed time in ms | Find2 (regex)<br>Elapsed time in ms |
+|:---------------:|:-------------------------:|:-------------------------:|
+|1                |27                          |10                          |
+|2                |1                          |0                          |
+|3                |0                          |1                          |
+|4                |0                          |2                          |
+|5                |0                          |1                          |
+|6                |0                          |2                          |
+|7                |0                          |3                          |
+|8                |0                          |2                          |
+|9                |0                          |2                          |
+|10                |0                          |2                          |
+|11                |0                          |4                          |
+|12                |0                          |3                          |
+|13                |1                          |3                          |
+|14                |1                          |6                          |
+|15                |1                          |6                          |
+|16                |1                          |7                          |
+|17                |1                          |5                          |
+|18                |1                          |4                          |
+|19                |1                          |8                          |
+|20                |1                          |5                          |
 
 **Observations**
 
@@ -119,7 +119,7 @@ Both methods are returning the same resuls but they differ for some milliseconds
 # Full console output
 <details>
   
-  <summary>The program tests up to 69 words in a single run. Here is the complete console output: click to expand!</summary>
+  <summary>The program tests up to 69 words in a single run. Here is a sample of a complete console output: click to expand!</summary>
   
   ## Output
   
