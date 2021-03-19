@@ -61,10 +61,10 @@ namespace WordFinder{
         {
             //Creates a collection of tuples (string, int) which contains every word with the frequency of that word in the matrix.
             //Sort that collection by the frequency in a descending order and then takes the first 10 elements.
-            IEnumerable<(string, int)> result = wordstream.Select( x => (x, CharBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
+            IEnumerable<(string, int)> result = wordstream.Distinct().Select( x => (x, CharBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
 
             foreach((string,int) element in result)
-                Console.WriteLine($"({element.Item1},{element.Item2})");
+                Console.WriteLine($"\t({element.Item1},{element.Item2})");
 
             //if all the words in the wordstream are not present in the matrix then we return an empty set of strings.
             if(result.All( x => x.Item2 == 0))
@@ -86,10 +86,10 @@ namespace WordFinder{
         public IEnumerable<string> Find2(IEnumerable<string> wordstream)
         {
 
-            IEnumerable<(string, int)> result = wordstream.Select( x => (x, RegExBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
+            IEnumerable<(string, int)> result = wordstream.Distinct().Select( x => (x, RegExBasedFrequency(x))).OrderByDescending( t => t.Item2).Take(10);
 
             foreach((string,int) element in result)
-                Console.WriteLine($"({element.Item1},{element.Item2})");
+                Console.WriteLine($"\t({element.Item1},{element.Item2})");
 
             if(result.All( x => x.Item2 == 0))
                 return new List<string>();
@@ -191,6 +191,7 @@ namespace WordFinder{
 
             return total;
         }
+        
     }
 
 }
